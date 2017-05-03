@@ -10,6 +10,7 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+<<<<<<< HEAD
 
 *.xml
 
@@ -20,3 +21,5 @@ lib
 out
 
 .gitignore
+=======
+>>>>>>> bc1dd73954658d5e02ed384f25553a5610c676ca
