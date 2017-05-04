@@ -35,7 +35,6 @@ public class UserDao{
     public void save(User user){
         Session session = this.getSession();
         session.save(user);
-       // session.close();
     }
 
     public User login(String account, String password) {

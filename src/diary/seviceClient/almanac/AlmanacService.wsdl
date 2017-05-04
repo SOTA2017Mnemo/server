@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://almanac" xmlns:ax25="http://entity/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" targetNamespace="http://almanac">
+    <wsdl:documentation>AlmanacService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://entity/xsd">
+            <xs:complexType name="AlmanacResult">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="error_code" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="reason" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="result" nillable="true" type="ax25:Result"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Result">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="baiji" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="chongsha" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="id" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="ji" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="jishen" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="wuxing" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="xiongshen" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="yangli" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="yi" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="yinli" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax26="http://entity/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://almanac">
+            <xs:import namespace="http://entity/xsd"/>
+            <xs:element name="main">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="args" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAlmanac">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="date" nillable="true" type="xs:date"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAlmanacResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax26:AlmanacResult"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getAlmanacRequest">
+        <wsdl:part name="parameters" element="ns:getAlmanac"/>
+    </wsdl:message>
+    <wsdl:message name="getAlmanacResponse">
+        <wsdl:part name="parameters" element="ns:getAlmanacResponse"/>
+    </wsdl:message>
+    <wsdl:message name="mainRequest">
+        <wsdl:part name="parameters" element="ns:main"/>
+    </wsdl:message>
+    <wsdl:portType name="AlmanacServicePortType">
+        <wsdl:operation name="getAlmanac">
+            <wsdl:input message="ns:getAlmanacRequest" wsaw:Action="urn:getAlmanac"/>
+            <wsdl:output message="ns:getAlmanacResponse" wsaw:Action="urn:getAlmanacResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="main">
+            <wsdl:input message="ns:mainRequest" wsaw:Action="urn:main"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="AlmanacServiceSoap11Binding" type="ns:AlmanacServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getAlmanac">
+            <soap:operation soapAction="urn:getAlmanac" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="main">
+            <soap:operation soapAction="urn:main" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="AlmanacServiceSoap12Binding" type="ns:AlmanacServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getAlmanac">
+            <soap12:operation soapAction="urn:getAlmanac" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="main">
+            <soap12:operation soapAction="urn:main" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="AlmanacServiceHttpBinding" type="ns:AlmanacServicePortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="getAlmanac">
+            <http:operation location="getAlmanac"/>
+            <wsdl:input>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="main">
+            <http:operation location="main"/>
+            <wsdl:input>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="AlmanacService">
+        <wsdl:port name="AlmanacServiceHttpSoap11Endpoint" binding="ns:AlmanacServiceSoap11Binding">
+            <soap:address location="http://120.76.144.133:8080/axis2/services/AlmanacService.AlmanacServiceHttpSoap11Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="AlmanacServiceHttpSoap12Endpoint" binding="ns:AlmanacServiceSoap12Binding">
+            <soap12:address location="http://120.76.144.133:8080/axis2/services/AlmanacService.AlmanacServiceHttpSoap12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="AlmanacServiceHttpEndpoint" binding="ns:AlmanacServiceHttpBinding">
+            <http:address location="http://120.76.144.133:8080/axis2/services/AlmanacService.AlmanacServiceHttpEndpoint/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

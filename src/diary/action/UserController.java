@@ -41,7 +41,7 @@ public class UserController {
         MyJSON myJSON = new MyJSON();
         PrintWriter writer = response.getWriter();
         if (user == null) {
-            myJSON.setStatus("404");
+            myJSON.setStatus("400");
             writer.println(myJSON.toJSONString());
             writer.flush();
             return;
@@ -51,7 +51,8 @@ public class UserController {
         myJSON.putData("id", user.getId() + "");
         myJSON.putData("account", user.getAccount());
         myJSON.putData("name", user.getName());
-        myJSON.putData("birthday", user.getBirthday().toString());
+        myJSON.putData("birthday",
+                user.getBirthday() == null ? "":user.getBirthday().toString());
 
         writer.println(myJSON.toJSONString());
         writer.flush();
@@ -66,12 +67,12 @@ public class UserController {
 
         String account = request.getParameter("account");
         String password =  request.getParameter("password");
-        System.out.println("password: " + password + "account:" + account);
+        String name = request.getParameter("name");
         MyJSON myJSON = new MyJSON();
         PrintWriter writer = response.getWriter();
-        if(account == null || password == null){
-            myJSON.setStatus("401");
-            writer.println(myJSON.toJSONString());
+        if(account == null || password == null || name == null){
+            this.sendBadRequest(myJSON,writer);
+            return;
         }
         User user = userDao.findUserByAccount(account);
         if (user == null) {
@@ -79,14 +80,13 @@ public class UserController {
             user.setAccount(account);
             System.out.println(Encoder.EncoderByMd5(password));
             user.setPassword(Encoder.EncoderByMd5(password));
+            user.setName(name);
             request.getSession().setAttribute("user", user);
             userDao.save(user);
             myJSON.setStatus("200");
             writer.println(myJSON.toJSONString());
-        } else {
-            myJSON.setStatus("400");
-            writer.println(myJSON.toJSONString());
-        }
+        } else
+            this.sendBadRequest(myJSON,writer);
         writer.flush();
     }
 
@@ -102,6 +102,12 @@ public class UserController {
         MyJSON myJSON = new MyJSON();
         myJSON.setStatus("200");
         PrintWriter writer = response.getWriter();
+        writer.println(myJSON.toJSONString());
+        writer.flush();
+    }
+
+    private void sendBadRequest(MyJSON myJSON,PrintWriter writer){
+        myJSON.setStatus("400");
         writer.println(myJSON.toJSONString());
         writer.flush();
     }

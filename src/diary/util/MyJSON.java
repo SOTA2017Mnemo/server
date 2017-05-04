@@ -16,6 +16,9 @@ public class MyJSON extends JSONObject{
     public void putData(String key,String data){
         this.data.put(key,data);
     }
+    public void putData(String jsonString){
+        this.data = JSONObject.parseObject(jsonString);
+    }
 
     public String toJSONString(){
         this.put("data",data.toJSONString());
