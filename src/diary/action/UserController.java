@@ -85,7 +85,7 @@ public class UserController {
             user.setPassword(Encoder.EncoderByMd5(password));
             user.setName(name);
             request.getSession().setAttribute("user", user);
-            userDao.save(user);
+            userDao.addUser(user);
             myJSON.setStatus("200");
             writer.println(myJSON.toJSONString());
         } else

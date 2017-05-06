@@ -32,16 +32,18 @@ public class UserDao{
         return (User)query.uniqueResult();
     }
 
-    public void save(User user){
-        Session session = this.getSession();
-        session.save(user);
-    }
-
     public User login(String account, String password) {
         String hql = "from User u where u.account=? and u.password=?";
         Query query = getSession().createQuery(hql);// 本地SQL检索方式
         query.setString(0, account);
         query.setString(1, password);
+        return (User)query.uniqueResult();
+    }
+
+    public User findUserById(String userId){
+        String hql = "from User u where u.id=?";
+        Query query = getSession().createQuery(hql);// 本地SQL检索方式
+        query.setInteger(0, Integer.parseInt(userId));
         return (User)query.uniqueResult();
     }
 

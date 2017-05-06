@@ -29,4 +29,23 @@ public class AlmanacClient {
         }
         return null;
     }
+
+    public static String getYI(){
+        try {
+            AlmanacService locator = new AlmanacServiceLocator();
+            AlmanacServicePortType service = locator.getAlmanacServiceHttpSoap12Endpoint();
+            // If authorization is required
+            //((AlmanacServiceSoap11BindingStub)service).setUsername("user3");
+            //((AlmanacServiceSoap11BindingStub)service).setPassword("pass3");
+            // invoke business method
+            //AlmanacService as = locator.
+            AlmanacResult result = service.getAlmanac(new Date());
+            return result.getResult().getYi();
+        } catch (javax.xml.rpc.ServiceException ex) {
+            ex.printStackTrace();
+        } catch (java.rmi.RemoteException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
 }
