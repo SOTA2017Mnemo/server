@@ -40,7 +40,7 @@ public class HelloWorldClient {
           //((AlmanacServiceSoap11BindingStub)service).setPassword("pass3");
           // invoke business method
           StarResult result = service.getStarSignToday("射手座");
-          System.out.println(result.getJob());
+          System.out.println(result.getAll());
       } catch (javax.xml.rpc.ServiceException ex) {
           ex.printStackTrace();
       } catch (java.rmi.RemoteException ex) {

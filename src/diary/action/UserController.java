@@ -4,6 +4,7 @@ package diary.action;
 import com.alibaba.fastjson.JSONObject;
 import diary.bean.User;
 import diary.dao.UserDao;
+import diary.seviceClient.AlmanacClient;
 import diary.util.Encoder;
 import diary.util.MyJSON;
 import org.springframework.stereotype.Controller;
@@ -36,6 +37,7 @@ public class UserController {
         String account = request.getParameter("account");
         String password = request.getParameter("password");
         System.out.println("password: " + password + "account:" + account);
+        //System.out.println("忌："+AlmanacClient.getJI());
         User user = userDao.login(account, Encoder.EncoderByMd5(password));
         System.out.println(user);
         MyJSON myJSON = new MyJSON();
@@ -46,6 +48,7 @@ public class UserController {
             writer.flush();
             return;
         }
+
         request.getSession().setAttribute("user", user);
         myJSON.setStatus("200");
         myJSON.putData("id", user.getId() + "");

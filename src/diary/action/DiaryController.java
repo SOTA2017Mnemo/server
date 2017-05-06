@@ -117,7 +117,12 @@ public class DiaryController {
         jsonObject.put("status","200");
         JSONArray array = new JSONArray();
         for(Diary diary:diaryList){
-            array.add(JSON.toJSONString(diary));
+            JSONObject object = JSON.parseObject(JSON.toJSONString(diary));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String dateStr = sdf.format(diary.getDiaryDate());
+            object.put("diaryDate",dateStr);
+            array.add(object.toJSONString());
+
         }
 
         jsonObject.put("data",array);

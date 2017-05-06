@@ -182,11 +182,11 @@ public class Lunar {
   
     public static void main(String[] args) throws ParseException {  
     	DateInfo[] di=getMonthInfo("2000","2");
-    	for(int i=0;i<di.length;i++){
-    		System.out.println(di[i].date);
-    		System.out.println(di[i].lunar); 
-    		System.out.println(di[i].weekday);
-    	}
+//    	for(int i=0;i<di.length;i++){
+//    		System.out.println(di[i].getDate());
+//    		System.out.println(di[i].getlunar);
+//    		System.out.println(di[i].weekday);
+//    	}
 		
 		 
     }  
