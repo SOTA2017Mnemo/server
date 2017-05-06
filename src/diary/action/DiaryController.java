@@ -42,13 +42,17 @@ public class DiaryController {
         String userId = request.getParameter("userId");
         String content = request.getParameter("content");
         String weather = request.getParameter("weather");
+        String imgPath =request.getParameter("imgPath");
+        String picPath =request.getParameter("picPath");
         System.out.println(title);
         System.out.println(userId);
         System.out.println(content);
         System.out.println(weather);
+        System.out.println(imgPath);
+        System.out.println(picPath);
         MyJSON myJSON = new MyJSON();
         PrintWriter writer = response.getWriter();
-        if(title == null || userId == null || content == null || weather == null){
+        if(picPath==null||imgPath == null || userId == null || content == null || weather == null){
             this.sendBadRequest(myJSON,writer);
             return;
         }
@@ -59,6 +63,8 @@ public class DiaryController {
         diary.setTitle(title);
         diary.setWeather(weather);
         diary.setUserId(Integer.parseInt(userId));
+        diary.setImgPath(imgPath);
+        diary.setPicPath(picPath);
 
         diaryDao.save(diary);
 
@@ -88,6 +94,10 @@ public class DiaryController {
         String dateStr = sdf.format(diary.getDiaryDate());
         myJSON.putData(JSON.toJSONString(diary));
         myJSON.putData("diaryDate",dateStr);
+        String imgPath=diary.getImgPath()+"";
+        String picPath=diary.getPicPath()+"";
+        myJSON.putData("imgPath",imgPath);
+        myJSON.putData("picPath",picPath);
         myJSON.setStatus("200");
 
         writer.println(myJSON.toJSONString());
