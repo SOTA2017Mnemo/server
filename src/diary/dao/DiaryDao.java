@@ -46,33 +46,20 @@ public class DiaryDao {
         return (Diary)query.uniqueResult();
     }
 
-
-    public List<Diary> findByCriteria(
-            final String propertyName, final boolean isAsc,
+    public List<Diary> findDiaryList(
             final int firstResult, final int maxResults,String userId) {
-        Session session = this.getSession();
-        Criteria criteria = session.createCriteria(Diary.class);
-        // 按属性条件查询
-//        if(criterions!=null)
-//            for (int i = 0; i < criterions.size(); i++) {
-//                criteria.add(criterions.get(i));
-//            }
-        criteria.add(Restrictions.eq("user_id",Integer.parseInt(userId)));
-        // 按某个属性排序
-        if ( propertyName != null) {
-            if (isAsc) {
-                criteria.addOrder(Order.asc(propertyName));
-            } else {
-                criteria.addOrder(Order.desc(propertyName));
-            }
-        }
-        // 用于分页查询
-        if (maxResults != 0) {
-            criteria.setFirstResult(firstResult);
-            criteria.setMaxResults(maxResults);
-        }
-        List<Diary> list = criteria.list();
+        String hql = "from Diary d where d.userId=? "+"order by diaryDate desc ";
+        Query query = getSession().createQuery(hql);
+        query.setInteger(0,Integer.parseInt(userId));
+        query.setFirstResult(firstResult);
+        query.setMaxResults(maxResults);
+        List<Diary> list = query.list();
         return list;
+    }
+
+    public void save(Diary diary){
+        Session session = this.getSession();
+        session.save(diary);
     }
 
 }

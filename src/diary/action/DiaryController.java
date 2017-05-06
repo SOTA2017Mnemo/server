@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +41,30 @@ public class DiaryController {
         String title = request.getParameter("title");
         String userId = request.getParameter("userId");
         String content = request.getParameter("content");
+        String weather = request.getParameter("weather");
+        System.out.println(title);
+        System.out.println(userId);
+        System.out.println(content);
+        System.out.println(weather);
+        MyJSON myJSON = new MyJSON();
+        PrintWriter writer = response.getWriter();
+        if(title == null || userId == null || content == null || weather == null){
+            this.sendBadRequest(myJSON,writer);
+            return;
+        }
 
+        Diary diary = new Diary();
+        diary.setContent(content);
+        diary.setDiaryDate(new Date());
+        diary.setTitle(title);
+        diary.setWeather(weather);
+        diary.setUserId(Integer.parseInt(userId));
+
+        diaryDao.save(diary);
+
+        myJSON.setStatus("200");
+        writer.print(myJSON.toJSONString());
+        writer.flush();
     }
 
     @RequestMapping(params = "method=queryDiary", method = RequestMethod.POST)
@@ -58,7 +82,12 @@ public class DiaryController {
             this.sendBadRequest(myJSON, writer);
             return;
         }
-        myJSON.putData(myJSON.toJSONString());
+        System.out.println(diary.getDiaryDate());
+        System.out.println(JSON.toJSONString(diary.getDiaryDate()));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateStr = sdf.format(diary.getDiaryDate());
+        myJSON.putData(JSON.toJSONString(diary));
+        myJSON.putData("diaryDate",dateStr);
         myJSON.setStatus("200");
 
         writer.println(myJSON.toJSONString());
@@ -75,7 +104,6 @@ public class DiaryController {
         String count = request.getParameter("count");
         String userId = request.getParameter("user_id");
 
-
         PrintWriter writer = response.getWriter();
         if(index == null || count == null || userId == null){
             MyJSON myJSON = new MyJSON();
@@ -83,8 +111,7 @@ public class DiaryController {
             return;
         }
 
-        List<Diary> diaryList = diaryDao.findByCriteria(
-                "dairy_date", true,Integer.parseInt(index),
+        List<Diary> diaryList = diaryDao.findDiaryList(Integer.parseInt(index),
                 Integer.parseInt(count),userId);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status","200");
@@ -99,6 +126,8 @@ public class DiaryController {
 
 
     }
+
+
 
     private void sendBadRequest(MyJSON myJSON,PrintWriter writer){
         myJSON.setStatus("400");
