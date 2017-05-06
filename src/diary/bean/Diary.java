@@ -16,6 +16,10 @@ public class Diary {
     private String luckyColor;
     private String weather;
     private Integer userId;
+    private String imgPath;
+    private String picPath;
+
+
 
     @Id
     @Column(name = "id", nullable = false)
@@ -115,5 +119,25 @@ public class Diary {
         result = 31 * result + (weather != null ? weather.hashCode() : 0);
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "img_path")
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
+    }
+
+    @Basic
+    @Column(name = "pic_path")
+    public String getPicPath() {
+        return picPath;
+    }
+
+    public void setPicPath(String picPath) {
+        this.picPath = picPath;
     }
 }

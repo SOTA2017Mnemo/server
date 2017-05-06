@@ -15,6 +15,8 @@ public class User {
     private String password;
     private Date birthday;
 
+
+
     @Id
     @Column(name = "id", nullable = false)
     public int getId() {
