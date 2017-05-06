@@ -52,7 +52,7 @@ public class DiaryController {
         System.out.println(picPath);
         MyJSON myJSON = new MyJSON();
         PrintWriter writer = response.getWriter();
-        if(imgPath == null || userId == null || content == null || weather == null){
+        if(picPath==null||imgPath == null || userId == null || content == null || weather == null){
             this.sendBadRequest(myJSON,writer);
             return;
         }
