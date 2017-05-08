@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -113,24 +114,33 @@ public class DiaryController {
         String index = request.getParameter("index");
         String count = request.getParameter("count");
         String userId = request.getParameter("user_id");
+        String year=request.getParameter("year");
 
         PrintWriter writer = response.getWriter();
-        if(index == null || count == null || userId == null){
+        if(index == null || count == null || userId == null || year==null){
             MyJSON myJSON = new MyJSON();
             this.sendBadRequest(myJSON,writer);
             return;
         }
 
         List<Diary> diaryList = diaryDao.findDiaryList(Integer.parseInt(index),
-                Integer.parseInt(count),userId);
+                Integer.parseInt(count),userId,year);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status","200");
         JSONArray array = new JSONArray();
+
         for(Diary diary:diaryList){
+
+
             JSONObject object = JSON.parseObject(JSON.toJSONString(diary));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String dateStr = sdf.format(diary.getDiaryDate());
             object.put("diaryDate",dateStr);
+            String content=diary.getContent();
+            if(content.length()>50){
+                content=content.substring(0,50)+"...";
+            }
+            object.put("content",content);
             array.add(object.toJSONString());
 
         }
@@ -141,7 +151,87 @@ public class DiaryController {
 
 
     }
+    @RequestMapping(params = "method=diaryNum", method = RequestMethod.POST)
+    public void diaryNum(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json;charset=utf-8");
+        response.setCharacterEncoding("utf-8");
+;
 
+        String userId=request.getParameter("userId");
+        PrintWriter writer = response.getWriter();
+        if(userId==null){
+            MyJSON myJSON = new MyJSON();
+            this.sendBadRequest(myJSON,writer);
+            return;
+        }
+        HashSet<Integer> diaryYear=diaryDao.queryYearsById(userId);
+        JSONArray array=new JSONArray();
+        for(int i:diaryYear){
+            System.out.println(i);
+            int num = diaryDao.findDiaryNum(userId,i+"");
+            JSONObject jo=new JSONObject();
+            jo.put("year",i);
+            jo.put("num",num);
+            array.add(jo);
+        }
+
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status","200");
+        jsonObject.put("years",array);
+        writer.println(jsonObject.toJSONString());
+        writer.flush();
+
+
+    }
+    @RequestMapping(params = "method=diaryDay", method = RequestMethod.POST)
+    public void diaryDay(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json;charset=utf-8");
+        response.setCharacterEncoding("utf-8");
+        ;
+
+        String userId=request.getParameter("userId");
+        String month=request.getParameter("month");
+        String day=request.getParameter("day");
+        PrintWriter writer = response.getWriter();
+        if(userId==null||month==null||day==null){
+            MyJSON myJSON = new MyJSON();
+            this.sendBadRequest(myJSON,writer);
+            return;
+        }
+        List<Diary> diaryList = diaryDao.queryDiaryByDay(userId,month,day);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status","200");
+        JSONArray array = new JSONArray();
+
+        for(Diary diary:diaryList){
+
+
+            JSONObject object = JSON.parseObject(JSON.toJSONString(diary));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String dateStr = sdf.format(diary.getDiaryDate());
+            object.put("diaryDate",dateStr);
+            String imgPath=diary.getImgPath()+"";
+            String picPath=diary.getPicPath()+"";
+            object.put("imgPath",imgPath);
+            object.put("picPath",picPath);
+            String content=diary.getContent();
+            if(content.length()>50){
+                content=content.substring(0,50)+"...";
+            }
+            object.put("content",content);
+            array.add(object);
+
+        }
+
+        jsonObject.put("data",array);
+        writer.println(jsonObject.toJSONString());
+        writer.flush();
+
+
+    }
 
 
     private void sendBadRequest(MyJSON myJSON,PrintWriter writer){

@@ -8,6 +8,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import javax.annotation.Resource;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -47,14 +48,23 @@ public class DiaryDao {
     }
 
     public List<Diary> findDiaryList(
-            final int firstResult, final int maxResults,String userId) {
-        String hql = "from Diary d where d.userId=? "+"order by diaryDate desc ";
+            final int firstResult, final int maxResults,String userId,String year) {
+        String hql = "from Diary d where d.userId=? and d.diaryDate like :year"+" order by diaryDate desc ";
         Query query = getSession().createQuery(hql);
+        query.setString("year","%"+year+"%");
         query.setInteger(0,Integer.parseInt(userId));
         query.setFirstResult(firstResult);
         query.setMaxResults(maxResults);
         List<Diary> list = query.list();
         return list;
+    }
+    public int findDiaryNum(String userId,String year) {
+        String hql = "from Diary d where d.userId=? and d.diaryDate like :year"+" order by diaryDate desc ";
+        Query query = getSession().createQuery(hql);
+        query.setString("year","%"+year+"%");
+        query.setInteger(0,Integer.parseInt(userId));
+        List<Diary> list = query.list();
+        return list.size();
     }
 
     public void save(Diary diary){
@@ -62,4 +72,30 @@ public class DiaryDao {
         session.save(diary);
     }
 
+    public HashSet<Integer> queryYearsById(String userId) {
+        HashSet<Integer> results=new HashSet<Integer>();
+        String hql = "from Diary d where d.userId=? "+" order by diaryDate desc ";
+        Query query = getSession().createQuery(hql);
+        query.setInteger(0,Integer.parseInt(userId));
+        List<Diary> list = query.list();
+        for(int i=0;i<list.size();i++){
+            results.add(list.get(i).getDiaryDate().getYear()+1900);
+        }
+        return results;
+    }
+
+    public List<Diary> queryDiaryByDay(String userId, String month, String day) {
+        if(month.length()==1){
+            month="0"+month;
+        }
+        if(day.length()==1){
+            day="0"+day;
+        }
+        String hql = "from Diary d where d.userId=? and d.diaryDate like :format"+" order by diaryDate desc ";
+        Query query = getSession().createQuery(hql);
+        query.setString("format","%"+month+"-"+day+"%");
+        query.setInteger(0,Integer.parseInt(userId));
+        List<Diary> list = query.list();
+        return list;
+    }
 }

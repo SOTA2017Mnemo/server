@@ -58,7 +58,9 @@ public class ClientController {
             jsonObject.put("status","200");
             JSONArray array = new JSONArray();
             for(DateInfo dateInfo:dateInfos){
-                array.add(JSON.toJSONString(dateInfo));
+                JSONObject jo=new JSONObject();
+                jo.put("lunar",dateInfo.getLunar());
+                array.add(jo);
             }
             jsonObject.put("data",array);
             writer.println(jsonObject.toJSONString());

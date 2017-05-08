@@ -181,15 +181,16 @@ public class Lunar {
      
   
     public static void main(String[] args) throws ParseException {  
-    	DateInfo[] di=getMonthInfo("2000","2");
-//    	for(int i=0;i<di.length;i++){
-//    		System.out.println(di[i].getDate());
-//    		System.out.println(di[i].getlunar);
-//    		System.out.println(di[i].weekday);
-//    	}
+    	DateInfo[] di=getMonthInfo("2017","5");
+    	System.out.println(di.length);
+    	for(int i=0;i<di.length;i++){
+    		System.out.println(di[i].getDate());
+    		System.out.println(di[i].getLunar());
+    		System.out.println(di[i].getWeekday());
+    	}
 		
 		 
-    }  
+    }
     public static DateInfo[] getMonthInfo(String year,String month) throws ParseException{
     	Calendar c=Calendar.getInstance();
     	int[] daysOfMonth={31,28,31,30,31,30,31,31,30,31,30,31};
